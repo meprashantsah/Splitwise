@@ -33,3 +33,4 @@ Thumbs.db
 
 # Ignore migrations cache
 alembic/__pycache__/
+
