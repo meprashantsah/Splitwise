@@ -1,7 +1,7 @@
 from fastapi import FastAPI
+from app.api import groups
+from app.db.database import Base, engine
 
 app = FastAPI()
 
-@app.get("/")
-def welcome():
-    return {"message":"Namaste india"}
+app.include_router(groups.router)
