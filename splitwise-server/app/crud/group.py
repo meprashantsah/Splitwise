@@ -6,6 +6,9 @@ from app.models.expense import Expense
 from app.schemas.group import GroupCreate
 
 def create_group(db: Session, group_data: GroupCreate):
+    if is_group_name_taken(db, group_data.name):
+        raise ValueError("Group with this name already exists.")
+
     users = db.query(User).filter(User.id.in_(group_data.user_ids)).all()
 
     group = Group(name=group_data.name, users=users)
@@ -19,18 +22,18 @@ def get_group_details(db: Session, group_id: int):
     if not group:
         return None
 
-    # Calculate total expenses
-     # Efficient DB-level aggregation
     total_expenses = db.query(func.coalesce(func.sum(Expense.amount), 0.0))\
                        .filter(Expense.group_id == group_id)\
                        .scalar()
 
-    # Return custom dict or attach separately
     group_dict = {
         "id": group.id,
         "name": group.name,
         "users": group.users,
         "total_expenses": total_expenses,
     }
-
     return group_dict
+
+
+def is_group_name_taken(db: Session, group_name: str) -> bool:
+    return db.query(Group).filter(Group.name == group_name).first() is not None

@@ -1,5 +1,3 @@
-# app/api/expenses.py
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.schemas.expense import ExpenseCreate
@@ -8,7 +6,7 @@ from app.db.database import get_db
 
 router = APIRouter(prefix="/groups/{group_id}/expenses", tags=["Expenses"])
 
-@router.post("/", response_model=dict)  # You can create a response schema later
+@router.post("/", response_model=dict) 
 def add_expense(
     group_id: int,
     expense_in: ExpenseCreate,
